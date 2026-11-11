@@ -1,0 +1,8 @@
+{
+  "database": "pennywise_dataset.db",
+  "seed": 20261022,
+  "transaction_csv": "transactions.csv",
+  "transaction_csv_sha256": "c010838976c42f9bb9ffebf42cf373251f46896fef9c04c6f2d9b4dad406198e",
+  "generated_at": "2026-11-10T21:35:32.624797",
+  "checksum_updated_at": "2026-11-11T20:08:25"
+}

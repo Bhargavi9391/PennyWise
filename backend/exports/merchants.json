@@ -1,0 +1,102 @@
+[
+  {
+    "merchant_id": "MER-001",
+    "merchant_name": "Netflix",
+    "created_at": "2026-11-10 16:03:37.230307"
+  },
+  {
+    "merchant_id": "MER-002",
+    "merchant_name": "Amazon",
+    "created_at": "2026-11-10 16:03:37.231306"
+  },
+  {
+    "merchant_id": "MER-003",
+    "merchant_name": "Swiggy",
+    "created_at": "2026-11-10 16:03:37.231306"
+  },
+  {
+    "merchant_id": "MER-004",
+    "merchant_name": "Zomato",
+    "created_at": "2026-11-10 16:03:37.232306"
+  },
+  {
+    "merchant_id": "MER-005",
+    "merchant_name": "Uber",
+    "created_at": "2026-11-10 16:03:37.232306"
+  },
+  {
+    "merchant_id": "MER-006",
+    "merchant_name": "Ola",
+    "created_at": "2026-11-10 16:03:37.233315"
+  },
+  {
+    "merchant_id": "MER-007",
+    "merchant_name": "BigBasket",
+    "created_at": "2026-11-10 16:03:37.233315"
+  },
+  {
+    "merchant_id": "MER-008",
+    "merchant_name": "Airtel",
+    "created_at": "2026-11-10 16:03:37.234310"
+  },
+  {
+    "merchant_id": "MER-009",
+    "merchant_name": "Jio",
+    "created_at": "2026-11-10 16:03:37.234310"
+  },
+  {
+    "merchant_id": "MER-010",
+    "merchant_name": "Electricity Board",
+    "created_at": "2026-11-10 16:03:37.235309"
+  },
+  {
+    "merchant_id": "MER-011",
+    "merchant_name": "Apollo Pharmacy",
+    "created_at": "2026-11-10 16:03:37.235309"
+  },
+  {
+    "merchant_id": "MER-012",
+    "merchant_name": "DMart",
+    "created_at": "2026-11-10 16:03:37.236216"
+  },
+  {
+    "merchant_id": "MER-013",
+    "merchant_name": "Flipkart",
+    "created_at": "2026-11-10 16:03:37.237184"
+  },
+  {
+    "merchant_id": "MER-014",
+    "merchant_name": "Indian Railways",
+    "created_at": "2026-11-10 16:03:37.238181"
+  },
+  {
+    "merchant_id": "MER-015",
+    "merchant_name": "Salary",
+    "created_at": "2026-11-10 16:03:37.239184"
+  },
+  {
+    "merchant_id": "MER-016",
+    "merchant_name": "Local Store",
+    "created_at": "2026-11-10 16:03:37.239184"
+  },
+  {
+    "merchant_id": "MER-017",
+    "merchant_name": "Water Board",
+    "created_at": "2026-11-10 16:03:37.240183"
+  },
+  {
+    "merchant_id": "MER-018",
+    "merchant_name": "Education Institute",
+    "created_at": "2026-11-10 16:03:37.240183"
+  },
+  {
+    "merchant_id": "MER-019",
+    "merchant_name": "Petrol Pump",
+    "created_at": "2026-11-10 16:03:37.241183"
+  },
+  {
+    "merchant_id": "MER-020",
+    "merchant_name": "Movie Theatre",
+    "created_at": "2026-11-10 16:03:37.241183"
+  }
+]

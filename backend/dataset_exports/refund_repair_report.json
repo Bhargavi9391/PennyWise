@@ -1,0 +1,11 @@
+{
+    "total_transactions": 500000,
+    "total_refunds": 14371,
+    "matched_refunds": 13303,
+    "unmatched_exceptions": 1068,
+    "refund_amounts_changed": 0,
+    "bad_links": 0,
+    "over_refunded_originals": 0,
+    "database_modified": true,
+    "validation": "PASSED"
+}

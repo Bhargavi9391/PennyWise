@@ -1,0 +1,13 @@
+{
+    "seed": 20261022,
+    "transactions": 500000,
+    "ground_truth_rows": 500000,
+    "total_refunds": 14371,
+    "linked_refunds": 13303,
+    "unmatched_refund_exceptions": 1068,
+    "refunds_with_invalid_references": 0,
+    "invalid_transfer_groups": 0,
+    "recurring_series": 5000,
+    "recurring_occurrences": 51750,
+    "passed": true
+}

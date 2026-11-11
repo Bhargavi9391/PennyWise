@@ -1,0 +1,67 @@
+[
+  {
+    "scenario_id": "EDGE-001",
+    "issue_type": "TRANSFER_DOUBLE_COUNT",
+    "title": "Transfer counted as household expense",
+    "related_transaction_id": "DS-TXN-000000030",
+    "related_series_id": null,
+    "observed_behavior": "Both sides of an internal transfer may be added to spending.",
+    "expected_behavior": "Internal transfers must be excluded from household expense totals.",
+    "test_payload": "{\"transfer_group_id\": \"TRF-DSU-000001-0001\", \"expected_pair_count\": 2, \"expected_expense_contribution\": 0}",
+    "severity": "High",
+    "status": "Open",
+    "created_at": "2026-11-10T17:01:38.080309+00:00"
+  },
+  {
+    "scenario_id": "EDGE-002",
+    "issue_type": "REFUND_AS_NEW_EXPENSE",
+    "title": "Refund treated as a new expense",
+    "related_transaction_id": "DS-TXN-000000038",
+    "related_series_id": null,
+    "observed_behavior": "Refund may be added as a separate positive expense.",
+    "expected_behavior": "Refund must be linked to the original transaction and reduce net spending.",
+    "test_payload": "{\"refund_transaction_id\": \"DS-TXN-000000038\", \"original_transaction_id\": \"DS-TXN-000000002\", \"expected_treatment\": \"REDUCE_ORIGINAL_EXPENSE\"}",
+    "severity": "High",
+    "status": "Open",
+    "created_at": "2026-11-10T17:01:38.080309+00:00"
+  },
+  {
+    "scenario_id": "EDGE-003",
+    "issue_type": "RECURRING_PAYMENT_SKIPPED",
+    "title": "Recurring payment occurrence is missing",
+    "related_transaction_id": null,
+    "related_series_id": "DS-REC-DSU-000001-MER-008",
+    "observed_behavior": "A recurring series may be marked active even when an expected payment is missing.",
+    "expected_behavior": "A missing expected occurrence should be flagged for review, not silently treated as paid.",
+    "test_payload": "{\"series_id\": \"DS-REC-DSU-000001-MER-008\", \"series_name\": \"Airtel Subscription\", \"frequency\": \"Monthly\", \"expected_payment_date\": \"2026-10-01\", \"expected_status\": \"MISSING_REQUIRES_REVIEW\"}",
+    "severity": "Medium",
+    "status": "Open",
+    "created_at": "2026-11-10T17:01:38.080309+00:00"
+  },
+  {
+    "scenario_id": "EDGE-004",
+    "issue_type": "TIMEZONE_BOUNDARY",
+    "title": "Transaction crosses local date boundary",
+    "related_transaction_id": null,
+    "related_series_id": null,
+    "observed_behavior": "A UTC timestamp near midnight may belong to a different local calendar date.",
+    "expected_behavior": "Reporting must use the account's configured timezone before assigning the transaction date.",
+    "test_payload": "{\"timezone\": \"Asia/Kolkata\", \"utc_timestamp\": \"2025-12-31T18:45:00Z\", \"local_timestamp\": \"2026-01-01T00:15:00+05:30\", \"expected_local_date\": \"2026-01-01\"}",
+    "severity": "Medium",
+    "status": "Open",
+    "created_at": "2026-11-10T17:01:38.080309+00:00"
+  },
+  {
+    "scenario_id": "EDGE-005",
+    "issue_type": "INVALID_BUDGET_CATEGORY",
+    "title": "Budget references unknown category",
+    "related_transaction_id": null,
+    "related_series_id": null,
+    "observed_behavior": "An incoming budget request may contain a category ID absent from the taxonomy.",
+    "expected_behavior": "Reject the budget request and return a category validation error.",
+    "test_payload": "{\"attempted_category_id\": \"CAT-999\", \"valid_category_ids\": [\"CAT-001\", \"CAT-002\", \"CAT-003\", \"CAT-004\", \"CAT-005\"], \"expected_result\": \"REJECT_INVALID_CATEGORY\"}",
+    "severity": "High",
+    "status": "Open",
+    "created_at": "2026-11-10T17:01:38.080309+00:00"
+  }
+]

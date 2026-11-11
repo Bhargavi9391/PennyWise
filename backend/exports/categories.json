@@ -1,0 +1,37 @@
+[
+  {
+    "category_id": "CAT-001",
+    "category_name": "Food & Dining",
+    "category_type": "Expense"
+  },
+  {
+    "category_id": "CAT-002",
+    "category_name": "Transportation",
+    "category_type": "Expense"
+  },
+  {
+    "category_id": "CAT-003",
+    "category_name": "Shopping",
+    "category_type": "Expense"
+  },
+  {
+    "category_id": "CAT-004",
+    "category_name": "Housing",
+    "category_type": "Expense"
+  },
+  {
+    "category_id": "CAT-005",
+    "category_name": "Entertainment",
+    "category_type": "Expense"
+  },
+  {
+    "category_id": "CAT-006",
+    "category_name": "Income",
+    "category_type": "Income"
+  },
+  {
+    "category_id": "CAT-007",
+    "category_name": "Transfer",
+    "category_type": "Transfer"
+  }
+]

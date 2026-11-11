@@ -1,0 +1,14 @@
+{
+  "accounts": 2000,
+  "budgets": 65000,
+  "categories": 7,
+  "category_rules": 28,
+  "edge_case_scenarios": 5,
+  "insights": 0,
+  "merchants": 20,
+  "recurring_occurrences": 51750,
+  "recurring_series": 5000,
+  "transaction_categorizations": 365177,
+  "transactions": 500000,
+  "user_profiles": 1000
+}

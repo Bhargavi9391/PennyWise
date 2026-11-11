@@ -1,0 +1,1 @@
+﻿insight_id,user_id,insight_type,severity,title,description,metric_value,threshold_value,category_id,budget_id,transaction_id,series_id,period_start,period_end,status,created_at,updated_at
