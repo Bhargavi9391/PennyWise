@@ -423,14 +423,22 @@ def add_transaction():
         year = transaction_date.year
         prefix = f"TXN-{year}-"
 
+        # Include historical transaction IDs so deleted IDs are never reused.
         existing_ids = session.query(Transaction.transaction_id).filter(
             Transaction.transaction_id.like(f"{prefix}%")
         ).all()
 
+        historical_ids = session.query(LifecycleEvent.entity_id).filter(
+            LifecycleEvent.entity_type == "Transaction",
+            LifecycleEvent.entity_id.like(f"{prefix}%")
+        ).all()
+
+        all_ids = [row[0] for row in existing_ids + historical_ids]
+
         numbers = [
-            int(row[0].split("-")[-1])
-            for row in existing_ids
-            if row[0].split("-")[-1].isdigit()
+            int(txn_id[len(prefix):])
+            for txn_id in all_ids
+            if txn_id.startswith(prefix) and txn_id[len(prefix):].isdigit()
         ]
 
         transaction_id = f"{prefix}{max(numbers, default=0) + 1:08d}"
