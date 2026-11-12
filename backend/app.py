@@ -1696,11 +1696,22 @@ def save_or_update_insight(session, unique_key, user_id, insight_type,
     insight = session.get(Insight, insight_id)
 
     if insight:
-        # Do not reactivate an already resolved insight.
+        # Reactivate a resolved insight when its triggering condition
+        # is detected again. Preserve the transition in lifecycle history.
         if insight.status == "Resolved":
-            return insight
+            session.add(LifecycleEvent(
+                event_id=f"EVT-{uuid.uuid4().hex[:16]}",
+                entity_type="Insight",
+                entity_id=insight.insight_id,
+                event_type="Status Changed",
+                old_value="Resolved",
+                new_value="New",
+                actor="system",
+                reason="Insight condition detected again"
+            ))
+            insight.status = "New"
 
-        # Update existing active insight.
+        # Update existing insight.
         old_insight_value = (
             f"status={insight.status}; severity={insight.severity}; "
             f"title={insight.title}; metric={insight.metric_value}"
