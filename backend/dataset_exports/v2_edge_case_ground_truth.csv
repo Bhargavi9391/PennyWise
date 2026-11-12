@@ -1,0 +1,6 @@
+scenario_id,issue_type,related_transaction_id,related_series_id,expected_decision,observed_negative_case,test_payload,passed
+V2-EDGE-001,TRANSFER_DOUBLE_COUNT,TXN-2026-00000150,,EXCLUDE_TRANSFER_FROM_EXPENSE,Transfer incorrectly counted as spending,"{""transfer_group_id"": ""TRF-000000150"", ""transaction_ids"": [""TXN-2026-00000150"", ""TXN-2026-00000151""]}",True
+V2-EDGE-002,REFUND_AS_NEW_EXPENSE,TXN-2026-00000038,,REFUND_REDUCES_NET_SPENDING,Refund incorrectly treated as a new expense,"{""original_transaction_id"": ""TXN-2026-00000004"", ""refund_amount"": ""249.50""}",True
+V2-EDGE-003,RECURRING_PAYMENT_SKIPPED,,REC-000001-001-EXP,FLAG_MISSING_EXPECTED_OCCURRENCE,Expected recurring payment absent,"{""expected_date"": ""2026-11-15"", ""series_id"": ""REC-000001-001-EXP""}",True
+V2-EDGE-004,TIMEZONE_BOUNDARY,,,USE_LOCAL_CALENDAR_DATE,UTC and local dates differ,"{""utc_timestamp"": ""2025-12-31T18:45:00+00:00"", ""local_timezone"": ""+05:30"", ""expected_local_date"": ""2026-01-01""}",True
+V2-EDGE-005,INVALID_BUDGET_CATEGORY,,,REJECT_UNKNOWN_CATEGORY,Budget references category outside taxonomy,"{""budget_id"": ""BUD-USR-000001-2025-11-CAT-001"", ""invalid_category_id"": ""CAT-INVALID-999""}",True

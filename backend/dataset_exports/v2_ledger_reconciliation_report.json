@@ -1,0 +1,24 @@
+{
+  "dataset": "v2_full_run2",
+  "transactions": 500000,
+  "transaction_counts": {
+    "Expense": 358982,
+    "Income": 70632,
+    "Refund": 12990,
+    "Transfer": 57396
+  },
+  "totals": {
+    "income": "3973017466.14",
+    "gross_expenses": "1887586200.16",
+    "refunds": "36063934.60",
+    "net_spending": "1851522265.56",
+    "transfer_net": "0.00",
+    "net_cashflow": "2121495200.58",
+    "expected_cashflow": "2121495200.58",
+    "sum_account_balance_deltas": "2121495200.58"
+  },
+  "transfer_groups_checked": 28698,
+  "errors_count": 0,
+  "errors_sample": [],
+  "passed": true
+}

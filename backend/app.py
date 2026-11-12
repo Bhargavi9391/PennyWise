@@ -1409,7 +1409,7 @@ def detect_recurring_payments():
     try:
         transactions = session.query(Transaction).filter(
             Transaction.user_id == DEMO_USER_ID,
-            Transaction.transaction_type == "Expense",
+            Transaction.transaction_type.in_(["Expense", "Income"]),
             Transaction.status == "Completed"
         ).order_by(Transaction.transaction_date.asc()).all()
 
@@ -1431,7 +1431,10 @@ def detect_recurring_payments():
 
             group_key = (
                 transaction.account_id,
-                merchant_key
+                transaction.transaction_type,
+                merchant_key,
+                description_key,
+                abs(Decimal(str(transaction.amount))).quantize(Decimal("1"))
             )
 
             groups[group_key].append(transaction)
@@ -1441,7 +1444,7 @@ def detect_recurring_payments():
 
         for group_key, group_transactions in groups.items():
 
-            if len(group_transactions) < 2:
+            if len(group_transactions) < 3:
                 continue
 
             group_transactions.sort(
@@ -1476,7 +1479,7 @@ def detect_recurring_payments():
 
             # Validate payment amounts.
             amounts = [
-                Decimal(str(item.amount))
+                abs(Decimal(str(item.amount)))
                 for item in group_transactions
             ]
 
@@ -1866,9 +1869,9 @@ def generate_insights():
                     "Budget Overspending",
                     "High",
                     f"{category_name} budget exceeded",
-                    f"You spent ₹{spent:.2f} against a budget of "
-                    f"₹{budget_amount:.2f}. Overspending: "
-                    f"₹{spent - budget_amount:.2f}.",
+                    f"You spent â‚¹{spent:.2f} against a budget of "
+                    f"â‚¹{budget_amount:.2f}. Overspending: "
+                    f"â‚¹{spent - budget_amount:.2f}.",
                     spent,
                     budget_amount,
                     category_id=budget.category_id,
@@ -1887,7 +1890,7 @@ def generate_insights():
                     "Medium",
                     f"{category_name} budget warning",
                     f"You have used {percentage:.1f}% of your "
-                    f"₹{budget_amount:.2f} budget.",
+                    f"â‚¹{budget_amount:.2f} budget.",
                     spent,
                     budget_amount,
                     category_id=budget.category_id,
@@ -1914,7 +1917,7 @@ def generate_insights():
                 Transaction.user_id == DEMO_USER_ID,
                 Transaction.category_id == category.category_id,
                 Transaction.status == "Completed",
-                Transaction.transaction_type == "Expense",
+                Transaction.transaction_type.in_(["Expense", "Income"]),
                 Transaction.transaction_date >= current_start,
                 Transaction.transaction_date <= today
             ).all()
@@ -1923,7 +1926,7 @@ def generate_insights():
                 Transaction.user_id == DEMO_USER_ID,
                 Transaction.category_id == category.category_id,
                 Transaction.status == "Completed",
-                Transaction.transaction_type == "Expense",
+                Transaction.transaction_type.in_(["Expense", "Income"]),
                 Transaction.transaction_date >= previous_start,
                 Transaction.transaction_date <= previous_end
             ).all()
@@ -1988,7 +1991,7 @@ def generate_insights():
                     "Recurring Payment",
                     "High",
                     f"{series.series_name} payment is overdue",
-                    f"Expected payment of ₹{series.expected_amount} "
+                    f"Expected payment of â‚¹{series.expected_amount} "
                     f"was due on {payment_info['due_date']}. "
                     f"It is {payment_info['days_overdue']} days overdue.",
                     Decimal(str(series.expected_amount)),
@@ -2009,7 +2012,7 @@ def generate_insights():
                     "Recurring Payment",
                     "Low",
                     f"{series.series_name} payment is coming up",
-                    f"Expected payment of ₹{series.expected_amount} "
+                    f"Expected payment of â‚¹{series.expected_amount} "
                     f"is due on {payment_info['due_date']}.",
                     Decimal(str(series.expected_amount)),
                     None,
@@ -2077,7 +2080,7 @@ def generate_insights():
                 "Medium",
                 "Transaction needs categorization",
                 f"Transaction '{transaction.description}' "
-                f"for ₹{transaction.amount} has no category assigned.",
+                f"for â‚¹{transaction.amount} has no category assigned.",
                 Decimal(str(transaction.amount)),
                 None,
                 transaction_id=transaction.transaction_id

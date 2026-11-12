@@ -1,0 +1,36 @@
+{
+  "dataset": "v2_full_run2",
+  "evaluation_unit": "user-account-type-merchant group",
+  "reference_labels": "recurring_occurrences.csv",
+  "detector": "Offline equivalent of app.py frequency, interval and amount checks; includes Income",
+  "groups_evaluated": 396530,
+  "labelled_positive_transaction_ids": 36000,
+  "TP": 2999,
+  "FP": 0,
+  "FN": 1,
+  "TN": 393530,
+  "precision": 1.0,
+  "recall": 0.999667,
+  "f1": 0.999833,
+  "mismatch_examples": [
+    {
+      "group": [
+        "USR-000750",
+        "ACC-USR-000750-01",
+        "Expense",
+        "merchant:MER-001",
+        "netflix",
+        "499"
+      ],
+      "transactions": 13,
+      "actual": true,
+      "predicted": false
+    }
+  ],
+  "limitations": [
+    "Not a direct Flask endpoint execution",
+    "Recurring reference labels are generator-produced, not manually annotated",
+    "Group-level metrics do not measure individual occurrence matching",
+    "Grouping and date logic may differ from live API for some records"
+  ]
+}

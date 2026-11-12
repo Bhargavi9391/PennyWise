@@ -1,0 +1,78 @@
+{
+  "dataset": "v2_full_run2",
+  "scope": "Separate labelled negative-case fixtures; baseline CSVs unchanged",
+  "total": 5,
+  "passed": 5,
+  "failed": 0,
+  "cases": [
+    {
+      "scenario_id": "V2-EDGE-001",
+      "issue_type": "TRANSFER_DOUBLE_COUNT",
+      "related_transaction_id": "TXN-2026-00000150",
+      "related_series_id": "",
+      "expected_decision": "EXCLUDE_TRANSFER_FROM_EXPENSE",
+      "observed_negative_case": "Transfer incorrectly counted as spending",
+      "test_payload": {
+        "transfer_group_id": "TRF-000000150",
+        "transaction_ids": [
+          "TXN-2026-00000150",
+          "TXN-2026-00000151"
+        ]
+      },
+      "passed": true
+    },
+    {
+      "scenario_id": "V2-EDGE-002",
+      "issue_type": "REFUND_AS_NEW_EXPENSE",
+      "related_transaction_id": "TXN-2026-00000038",
+      "related_series_id": "",
+      "expected_decision": "REFUND_REDUCES_NET_SPENDING",
+      "observed_negative_case": "Refund incorrectly treated as a new expense",
+      "test_payload": {
+        "original_transaction_id": "TXN-2026-00000004",
+        "refund_amount": "249.50"
+      },
+      "passed": true
+    },
+    {
+      "scenario_id": "V2-EDGE-003",
+      "issue_type": "RECURRING_PAYMENT_SKIPPED",
+      "related_transaction_id": "",
+      "related_series_id": "REC-000001-001-EXP",
+      "expected_decision": "FLAG_MISSING_EXPECTED_OCCURRENCE",
+      "observed_negative_case": "Expected recurring payment absent",
+      "test_payload": {
+        "expected_date": "2026-11-15",
+        "series_id": "REC-000001-001-EXP"
+      },
+      "passed": true
+    },
+    {
+      "scenario_id": "V2-EDGE-004",
+      "issue_type": "TIMEZONE_BOUNDARY",
+      "related_transaction_id": "",
+      "related_series_id": "",
+      "expected_decision": "USE_LOCAL_CALENDAR_DATE",
+      "observed_negative_case": "UTC and local dates differ",
+      "test_payload": {
+        "utc_timestamp": "2025-12-31T18:45:00+00:00",
+        "local_timezone": "+05:30",
+        "expected_local_date": "2026-01-01"
+      },
+      "passed": true
+    },
+    {
+      "scenario_id": "V2-EDGE-005",
+      "issue_type": "INVALID_BUDGET_CATEGORY",
+      "related_transaction_id": "",
+      "related_series_id": "",
+      "expected_decision": "REJECT_UNKNOWN_CATEGORY",
+      "observed_negative_case": "Budget references category outside taxonomy",
+      "test_payload": {
+        "budget_id": "BUD-USR-000001-2025-11-CAT-001",
+        "invalid_category_id": "CAT-INVALID-999"
+      },
+      "passed": true
+    }
+  ]
+}
