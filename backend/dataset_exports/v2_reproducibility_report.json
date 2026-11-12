@@ -1,0 +1,21 @@
+{
+  "seed": 20261022,
+  "users": 1000,
+  "transactions_per_user": 500,
+  "counts_match": true,
+  "all_csv_sha256_match": true,
+  "matched_files": 10,
+  "total_files": 10,
+  "sha256": {
+    "accounts.csv": "1531d5af640b0b5355045041b6d05e81adf59c6ea6f73f76c362c3b72a45cd9c",
+    "budgets.csv": "ed27cbc6774b50317987457924903bf3da7846812e2f8bb2d664ea7cc9d5ad34",
+    "categories.csv": "cf120c690eb944f3b114a3a8fe8ef6dd195cd081a70296157ff7c0fc9bef2f25",
+    "ground_truth.csv": "16eeb57b1924302229a9dc17155f7f42647a96a135e44f552d9898dc01d32f67",
+    "insights.csv": "6f7abf18f7f637575d852ee39eb2d4f541e780dcce492789dc2f14fe1c6af3f2",
+    "merchants.csv": "d27a6feba2be9bc2e8083866a97987e1c4b43d5753e90687bc2bcf713cd5b74f",
+    "recurring_occurrences.csv": "d9188a34e1604efb5abfeee38c5eca1e8c0a9f57cf6667dbb40eac42268350d2",
+    "recurring_series.csv": "ce0565440138dd925851125adf376e861c32d8f4fc3167723901adf1c922c121",
+    "transactions.csv": "b66169834dc33ed16c8be563b2a27c5fe0f4a6bd1a9412d35d5cfd876a4804d6",
+    "user_profiles.csv": "0039b93207a223e7043b409d235bf9027f5b8a526783f62d468bb017549d33c1"
+  }
+}

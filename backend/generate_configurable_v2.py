@@ -1,4 +1,4 @@
-"""PennyWise deterministic standalone CSV dataset generator.
+﻿"""PennyWise deterministic standalone CSV dataset generator.
 
 Usage:
   python generate_configurable.py --users 2 --transactions-per-user 50 --output-dir test_run1
@@ -185,7 +185,7 @@ def main():
   with (out/(table+'.csv')).open('rb') as f:
    for chunk in iter(lambda:f.read(1024*1024),b''):h.update(chunk)
   checksums[table+'.csv']=h.hexdigest()
- manifest={'generator':'generate_configurable.py','seed':a.seed,'users':a.users,'transactions_per_user':a.transactions_per_user,'date_start':START.isoformat(),'date_end':END.isoformat(),'counts':dict(counts),'sha256':checksums,'note':'New reproducible CSV generator; does not reproduce pre-existing SQLite database byte-for-byte. Ground truth is separate from transactions input.'}
+ manifest={'generator':'generate_configurable_v2.py','seed':a.seed,'users':a.users,'transactions_per_user':a.transactions_per_user,'date_start':START.isoformat(),'date_end':END.isoformat(),'counts':dict(counts),'sha256':checksums,'note':'New reproducible CSV generator; does not reproduce pre-existing SQLite database byte-for-byte. Ground truth is separate from transactions input.'}
  (out/'manifest.json').write_text(json.dumps(manifest,indent=2,sort_keys=True)+'\n',encoding='utf-8')
  print('DONE:',out,'transactions:',counts['transactions'],'ground_truth:',counts['ground_truth'])
  print('Transactions SHA-256:',checksums['transactions.csv'])
