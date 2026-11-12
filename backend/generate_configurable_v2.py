@@ -64,6 +64,7 @@ def main():
  mapping['MER-021']='CAT-004'
  names={m['merchant_id']:m['merchant_name'] for m in merchants}
  writers={}; handles={}; counts=defaultdict(int)
+ recurring_counter = 0
  try:
   for table,fields in FIELDS.items():
    handle=(out/(table+'.csv')).open('w',encoding='utf-8',newline='')
@@ -167,7 +168,8 @@ def main():
    for (mid,kind),events in sorted(recurring.items()):
     events.sort()
     if len(events)<3:continue
-    rid=f'REC-{u:06d}-{mid.split("-")[-1]}-{kind[:3].upper()}'
+    recurring_counter += 1
+    rid=f'REC-{recurring_counter:06d}'
     latest=events[-1][0]
     next_year = latest.year + (1 if latest.month == 12 else 0)
     next_month = 1 if latest.month == 12 else latest.month + 1
