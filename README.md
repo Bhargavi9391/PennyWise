@@ -1,4 +1,4 @@
-# PennyWise
+﻿# PennyWise
 
 ## Business problem
 
@@ -44,9 +44,9 @@ It also includes a synthetic dataset for validation and analysis.
 - Recurring occurrences: 51,750
 - Categorization decisions: 365,177
 - Edge-case scenarios: 5
-- Insights in synthetic dataset: 0
+- Insights in original synthetic dataset: 0 (legacy snapshot; final V2 has 1,000)
 
-The dataset manifest records seed `20261022`; fresh-generation reproducibility has not been verified. The operational application database is
+The dataset manifest records seed `20261022`; the original SQLite snapshot was not independently regenerated; final V2 CSV reproducibility was verified. The operational application database is
 separate from the synthetic dataset database; their identifiers and records
 must not be mixed.
 
@@ -127,7 +127,7 @@ passed.
 - Backend GET API smoke tests: 8/8 PASS.
 - Frontend production build: PASS.
 - Small deterministic generator: PASS (2 runs, 100 transactions, seed 20261022).
-- Original 500,000-transaction fresh-generation reproducibility: NOT YET VERIFIED.
+- Original SQLite snapshot reproducibility: not verified. Final V2 CSV reproducibility: PASS (11/11 files, seed 20261022).
 
 The small reproducibility test uses
 `backend/reproducibility_tests/generate_small.py`.
@@ -175,7 +175,7 @@ Generated CSV folders are excluded from Git.
 - Users: 1,000
 - Transactions: 500,000
 - Two independent full runs completed.
-- CSV SHA-256 comparison: 10/10 files matched.
+- Final V2 CSV SHA-256 comparison: 11/11 files matched across two full runs.
 - Dataset counts matched across both runs.
 - V2 reproducibility report: `backend/dataset_exports/v2_reproducibility_report.json`
 - V2 manifest: `backend/dataset_exports/v2_manifest.json`
@@ -267,3 +267,4 @@ Export JSON:
 Export SQL:
 
 `python backend/export_v2_sql.py`
+
