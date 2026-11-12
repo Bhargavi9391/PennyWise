@@ -1,0 +1,32 @@
+{
+  "evaluation_scope": "Four manually labelled synthetic examples; frequency and interval validation only, not full API or 500K dataset",
+  "cases": [
+    {
+      "name": "monthly",
+      "expected": 1,
+      "predicted": 1
+    },
+    {
+      "name": "weekly",
+      "expected": 1,
+      "predicted": 1
+    },
+    {
+      "name": "irregular",
+      "expected": 0,
+      "predicted": 0
+    },
+    {
+      "name": "single",
+      "expected": 0,
+      "predicted": 0
+    }
+  ],
+  "tp": 2,
+  "tn": 2,
+  "fp": 0,
+  "fn": 0,
+  "precision": 1.0,
+  "recall": 1.0,
+  "f1": 1.0
+}
