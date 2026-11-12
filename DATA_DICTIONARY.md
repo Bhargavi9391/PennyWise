@@ -165,3 +165,30 @@ Generated from the actual SQLite database using PRAGMA metadata.
 | full_name | VARCHAR(100) | No | No | - |
 | email | VARCHAR(150) | No | No | - |
 | created_at | DATETIME | No | Yes | - |
+
+
+---
+
+# Operational Database ? Audit History
+
+## lifecycle_events (Operational Database)
+
+Stores immutable audit records for transaction lifecycle actions and recurring-series status changes. This table belongs to the operational application database, not the synthetic dataset schema.
+
+| Column | Type | Required | Description / Validation |
+|---|---|---|---|
+| event_id | VARCHAR(60) | Yes | Primary key; unique event identifier |
+| entity_type | VARCHAR(40) | Yes | Transaction, RecurringSeries, Budget, or Insight |
+| entity_id | VARCHAR(60) | Yes | ID of the affected entity; polymorphic reference, not a direct foreign key |
+| event_type | VARCHAR(40) | Yes | Created, Updated, Status Changed, or Deleted |
+| old_value | VARCHAR(500) | No | Previous entity values or status |
+| new_value | VARCHAR(500) | No | New entity values or status |
+| actor | VARCHAR(100) | Yes | Actor responsible for the event; defaults to system |
+| reason | VARCHAR(500) | No | Explanation for the event |
+| event_timestamp | DATETIME | Yes | UTC event timestamp; defaults to creation time |
+
+**Indexes:** `(entity_type, entity_id)` and `event_timestamp`.
+
+**Traceability:** Events retain previous and new values. Deletion events remain available after the original entity is deleted.
+
+**API:** `GET /api/lifecycle-events` supports `entity_type`, `entity_id`, and `limit` query parameters. Limit range: 1?100; default: 50.

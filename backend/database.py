@@ -563,6 +563,45 @@ class Insight(Base):
 
 
 # =====================================
+# 12. LIFECYCLE EVENT HISTORY
+# =====================================
+
+class LifecycleEvent(Base):
+    __tablename__ = "lifecycle_events"
+
+    event_id = Column(String(60), primary_key=True)
+
+    entity_type = Column(String(40), nullable=False)
+    entity_id = Column(String(60), nullable=False)
+
+    event_type = Column(String(40), nullable=False)
+
+    old_value = Column(String(500), nullable=True)
+    new_value = Column(String(500), nullable=True)
+
+    actor = Column(String(100), nullable=False, default="system")
+    reason = Column(String(500), nullable=True)
+
+    event_timestamp = Column(
+        DateTime,
+        default=datetime.utcnow,
+        nullable=False
+    )
+
+    __table_args__ = (
+        CheckConstraint(
+            "entity_type IN ('Transaction', 'RecurringSeries', 'Budget', 'Insight')",
+            name="check_lifecycle_entity_type"
+        ),
+        CheckConstraint(
+            "event_type IN ('Created', 'Updated', 'Status Changed', 'Deleted')",
+            name="check_lifecycle_event_type"
+        ),
+    )
+
+
+
+# =====================================
 # CREATE DATABASE TABLES
 # =====================================
 

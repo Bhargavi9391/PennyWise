@@ -173,3 +173,4 @@ export async function getCategorizationHistory() {
   const response = await fetch(`${API_BASE_URL}/api/categorization-history`);
   return handleResponse(response);
 }
+export async function getLifecycleEvents() { const response = await fetch(`${API_BASE_URL}/api/lifecycle-events`); return handleResponse(response); }

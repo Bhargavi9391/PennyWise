@@ -7,6 +7,7 @@ import hashlib
 import calendar
 import re
 import statistics
+import uuid
 
 from flask_cors import CORS
 
@@ -20,7 +21,8 @@ from database import (
     TransactionCategorization,
     RecurringSeries,
     RecurringOccurrence,
-    Insight
+    Insight,
+    LifecycleEvent
 )
 
 app = Flask(__name__)
@@ -459,6 +461,21 @@ def add_transaction():
                 decision_method="automatic" if matched_rule else "manual"
             )
 
+        session.add(LifecycleEvent(
+            event_id=f"EVT-{uuid.uuid4().hex[:16]}",
+            entity_type="Transaction",
+            entity_id=transaction_id,
+            event_type="Created",
+            old_value=None,
+            new_value=(
+                f"type={transaction_type}; amount={amount}; "
+                f"category_id={category.category_id if category else 'None'}; "
+                f"status=Completed"
+            ),
+            actor="system",
+            reason="Transaction created through API"
+        ))
+
         session.commit()
 
         return jsonify({
@@ -499,6 +516,15 @@ def update_transaction(transaction_id):
                 "status": "error",
                 "message": "Transaction not found"
             }), 404
+
+        # Capture original values before updating for audit history.
+        old_snapshot = (
+            f"name={transaction.description}; "
+            f"amount={transaction.amount}; "
+            f"date={transaction.transaction_date}; "
+            f"type={transaction.transaction_type}; "
+            f"category_id={transaction.category_id}"
+        )
 
         # Keep existing values when fields are not provided
         name = data.get("name", transaction.description)
@@ -590,6 +616,25 @@ def update_transaction(transaction_id):
                     decision_method="manual"
                 )
 
+        new_snapshot = (
+            f"name={transaction.description}; "
+            f"amount={transaction.amount}; "
+            f"date={transaction.transaction_date}; "
+            f"type={transaction.transaction_type}; "
+            f"category_id={transaction.category_id}"
+        )
+
+        session.add(LifecycleEvent(
+            event_id=f"EVT-{uuid.uuid4().hex[:16]}",
+            entity_type="Transaction",
+            entity_id=transaction_id,
+            event_type="Updated",
+            old_value=old_snapshot,
+            new_value=new_snapshot,
+            actor="system",
+            reason="Transaction updated through API"
+        ))
+
         session.commit()
 
         return jsonify({
@@ -643,6 +688,36 @@ def delete_transaction(transaction_id):
                 "message": "This transaction is linked to a recurring payment. Review the recurring payment first."
             }), 409
 
+        linked_refund = session.query(Transaction).filter_by(
+            original_transaction_id=transaction_id
+        ).first()
+
+        if linked_refund:
+            return jsonify({
+                "status": "error",
+                "message": "This transaction has linked refunds. Review or resolve the refunds before deleting the original transaction."
+            }), 409
+
+        old_snapshot = (
+            f"name={transaction.description}; "
+            f"amount={transaction.amount}; "
+            f"date={transaction.transaction_date}; "
+            f"type={transaction.transaction_type}; "
+            f"category_id={transaction.category_id}; "
+            f"status={transaction.status}"
+        )
+
+        session.add(LifecycleEvent(
+            event_id=f"EVT-{uuid.uuid4().hex[:16]}",
+            entity_type="Transaction",
+            entity_id=transaction_id,
+            event_type="Deleted",
+            old_value=old_snapshot,
+            new_value=None,
+            actor="system",
+            reason="Transaction deleted through API"
+        ))
+
         session.query(TransactionCategorization).filter_by(
             transaction_id=transaction_id
         ).delete(synchronize_session=False)
@@ -682,12 +757,11 @@ def get_budgets():
         budget_results = []
 
         for budget in budgets:
-            # Transactions within this budget's date period
+            # Load expenses and refunds in this budget period
             transactions = (
                 session.query(Transaction)
                 .filter(
                     Transaction.user_id == budget.user_id,
-                    Transaction.category_id == budget.category_id,
                     Transaction.transaction_date >= budget.period_start,
                     Transaction.transaction_date <= budget.period_end,
                     Transaction.status == "Completed",
@@ -697,18 +771,32 @@ def get_budgets():
             )
 
             gross_expenses = sum(
-                float(tx.amount)
-                for tx in transactions
+                float(tx.amount) for tx in transactions
                 if tx.transaction_type == "Expense"
+                and tx.category_id == budget.category_id
             )
+
+            refund_original_ids = {
+                tx.original_transaction_id for tx in transactions
+                if tx.transaction_type == "Refund" and tx.original_transaction_id
+            }
+            original_categories = {}
+            if refund_original_ids:
+                original_categories = dict(
+                    session.query(Transaction.transaction_id, Transaction.category_id)
+                    .filter(
+                        Transaction.user_id == budget.user_id,
+                        Transaction.transaction_id.in_(refund_original_ids)
+                    ).all()
+                )
 
             total_refunds = sum(
-                float(tx.amount)
-                for tx in transactions
+                float(tx.amount) for tx in transactions
                 if tx.transaction_type == "Refund"
+                and original_categories.get(tx.original_transaction_id) == budget.category_id
             )
 
-            # Refunds reduce spending; transfers are excluded
+            # Refunds reduce spending in the original expense category
             actual_spending = max(gross_expenses - total_refunds, 0)
 
             budget_amount = float(budget.budget_amount)
@@ -809,9 +897,13 @@ def add_budget():
         ).first()
 
         if existing:
+            old_budget_value = (
+                f"amount={existing.budget_amount}; status={existing.status}"
+            )
             existing.budget_amount = amount
             existing.status = "Active"
             budget = existing
+            budget_event_type = "Updated"
             message = "Budget updated successfully"
         else:
             budget = Budget(
@@ -824,7 +916,23 @@ def add_budget():
                 status="Active"
             )
             session.add(budget)
+            old_budget_value = None
+            budget_event_type = "Created"
             message = "Budget created successfully"
+
+        session.add(LifecycleEvent(
+            event_id=f"EVT-{uuid.uuid4().hex[:16]}",
+            entity_type="Budget",
+            entity_id=budget.budget_id,
+            event_type=budget_event_type,
+            old_value=old_budget_value,
+            new_value=(
+                f"amount={amount}; status=Active; "
+                f"category_id={category.category_id}"
+            ),
+            actor="system",
+            reason="Budget saved through API"
+        ))
 
         session.commit()
 
@@ -861,7 +969,22 @@ def update_budget(budget_id):
         if not amount.is_finite() or amount <= 0:
             return jsonify({"status": "error", "message": "Budget amount must be positive"}), 400
 
+        old_budget_value = (
+            f"amount={budget.budget_amount}; status={budget.status}"
+        )
         budget.budget_amount = amount
+
+        session.add(LifecycleEvent(
+            event_id=f"EVT-{uuid.uuid4().hex[:16]}",
+            entity_type="Budget",
+            entity_id=budget.budget_id,
+            event_type="Updated",
+            old_value=old_budget_value,
+            new_value=f"amount={amount}; status={budget.status}",
+            actor="system",
+            reason="Budget updated through API"
+        ))
+
         session.commit()
 
         return jsonify({
@@ -887,6 +1010,24 @@ def delete_budget(budget_id):
 
         if not budget or budget.user_id != DEMO_USER_ID:
             return jsonify({"status": "error", "message": "Budget not found"}), 404
+
+        old_budget_value = (
+            f"amount={budget.budget_amount}; status={budget.status}; "
+            f"category_id={budget.category_id}; "
+            f"period_start={budget.period_start}; "
+            f"period_end={budget.period_end}"
+        )
+
+        session.add(LifecycleEvent(
+            event_id=f"EVT-{uuid.uuid4().hex[:16]}",
+            entity_type="Budget",
+            entity_id=budget.budget_id,
+            event_type="Deleted",
+            old_value=old_budget_value,
+            new_value=None,
+            actor="system",
+            reason="Budget deleted through API"
+        ))
 
         session.delete(budget)
         session.commit()
@@ -1469,6 +1610,24 @@ def detect_recurring_payments():
                 date.today()
             )
 
+            # Persist missed-payment review status and audit real changes.
+            old_status = series.status
+
+            if payment_schedule["payment_status"] == "Overdue":
+                series.status = "Needs Review"
+
+            if series.status != old_status:
+                session.add(LifecycleEvent(
+                    event_id=f"EVT-{uuid.uuid4().hex[:16]}",
+                    entity_type="RecurringSeries",
+                    entity_id=series.series_id,
+                    event_type="Status Changed",
+                    old_value=old_status,
+                    new_value=series.status,
+                    actor="system",
+                    reason="Payment overdue"
+                ))
+
             detected_count += 1
 
             created_series.append({
@@ -1531,6 +1690,10 @@ def save_or_update_insight(session, unique_key, user_id, insight_type,
             return insight
 
         # Update existing active insight.
+        old_insight_value = (
+            f"status={insight.status}; severity={insight.severity}; "
+            f"title={insight.title}; metric={insight.metric_value}"
+        )
         insight.severity = severity
         insight.title = title
         insight.description = description
@@ -1543,6 +1706,21 @@ def save_or_update_insight(session, unique_key, user_id, insight_type,
         insight.period_start = period_start
         insight.period_end = period_end
         insight.updated_at = datetime.utcnow()
+
+        new_insight_value = (
+            f"status={insight.status}; severity={insight.severity}; "
+            f"title={insight.title}; metric={insight.metric_value}"
+        )
+        session.add(LifecycleEvent(
+            event_id=f"EVT-{uuid.uuid4().hex[:16]}",
+            entity_type="Insight",
+            entity_id=insight.insight_id,
+            event_type="Updated",
+            old_value=old_insight_value,
+            new_value=new_insight_value,
+            actor="system",
+            reason="Insight refreshed by generation"
+        ))
 
     else:
         insight = Insight(
@@ -1563,12 +1741,77 @@ def save_or_update_insight(session, unique_key, user_id, insight_type,
             status="New"
         )
         session.add(insight)
+        session.add(LifecycleEvent(
+            event_id=f"EVT-{uuid.uuid4().hex[:16]}",
+            entity_type="Insight",
+            entity_id=insight.insight_id,
+            event_type="Created",
+            old_value=None,
+            new_value=(
+                f"status=New; type={insight.insight_type}; "
+                f"severity={insight.severity}; title={insight.title}"
+            ),
+            actor="system",
+            reason="Insight generated"
+        ))
 
     return insight
 
 # =====================================
 # GENERATE INSIGHTS API
 # =====================================
+
+
+@app.route("/api/lifecycle-events", methods=["GET"])
+def get_lifecycle_events():
+    session = SessionLocal()
+
+    try:
+        entity_type = request.args.get("entity_type")
+        entity_id = request.args.get("entity_id")
+
+        try:
+            limit = int(request.args.get("limit", 50))
+        except ValueError:
+            return jsonify({"status": "error", "message": "Limit must be an integer"}), 400
+
+        if limit < 1 or limit > 100:
+            return jsonify({"status": "error", "message": "Limit must be between 1 and 100"}), 400
+
+        query = session.query(LifecycleEvent)
+
+        if entity_type:
+            query = query.filter_by(entity_type=entity_type)
+
+        if entity_id:
+            query = query.filter_by(entity_id=entity_id)
+
+        events = query.order_by(
+            LifecycleEvent.event_timestamp.desc(),
+            LifecycleEvent.event_id.desc()
+        ).limit(limit).all()
+
+        return jsonify({
+            "status": "success",
+            "count": len(events),
+            "events": [{
+                "event_id": event.event_id,
+                "entity_type": event.entity_type,
+                "entity_id": event.entity_id,
+                "event_type": event.event_type,
+                "old_value": event.old_value,
+                "new_value": event.new_value,
+                "actor": event.actor,
+                "reason": event.reason,
+                "event_timestamp": event.event_timestamp.isoformat()
+            } for event in events]
+        })
+
+    except Exception as error:
+        return jsonify({"status": "error", "message": str(error)}), 500
+
+    finally:
+        session.close()
 
 
 @app.route("/api/insights/generate", methods=["POST"])
@@ -1799,7 +2042,23 @@ def generate_insights():
                 or linked_transaction.status != "Completed"
             ):
                 if old_insight.status != "Resolved":
+                    previous_status = old_insight.status
                     old_insight.status = "Resolved"
+                    old_insight.updated_at = datetime.utcnow()
+
+                    session.add(LifecycleEvent(
+                        event_id=f"EVT-{uuid.uuid4().hex[:16]}",
+                        entity_type="Insight",
+                        entity_id=old_insight.insight_id,
+                        event_type="Status Changed",
+                        old_value=previous_status,
+                        new_value="Resolved",
+                        actor="system",
+                        reason=(
+                            "Uncategorized transaction was categorized, "
+                            "deleted or is no longer completed"
+                        )
+                    ))
 
         # Then create/update alerts only for transactions
         # that are still uncategorized.
@@ -1944,8 +2203,21 @@ def update_insight(insight_id):
                 "message": "Status must be New, Acknowledged or Resolved"
             }), 400
 
+        old_status = insight.status
         insight.status = new_status
         insight.updated_at = datetime.utcnow()
+
+        if old_status != new_status:
+            session.add(LifecycleEvent(
+                event_id=f"EVT-{uuid.uuid4().hex[:16]}",
+                entity_type="Insight",
+                entity_id=insight.insight_id,
+                event_type="Status Changed",
+                old_value=old_status,
+                new_value=new_status,
+                actor="system",
+                reason="Insight status changed through API"
+            ))
 
         session.commit()
 

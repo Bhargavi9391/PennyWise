@@ -157,4 +157,16 @@ erDiagram
     merchants ||--o{ transactions : "merchant_id"
     accounts ||--o{ transactions : "account_id"
     user_profiles ||--o{ transactions : "user_id"
+%% Operational application audit history (separate from dataset schema)
+    lifecycle_events {
+        VARCHAR(60) event_id PK
+        VARCHAR(40) entity_type
+        VARCHAR(60) entity_id
+        VARCHAR(40) event_type
+        VARCHAR(500) old_value
+        VARCHAR(500) new_value
+        VARCHAR(100) actor
+        VARCHAR(500) reason
+        DATETIME event_timestamp
+    }
 ```

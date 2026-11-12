@@ -1,39 +1,25 @@
-# Python
-__pycache__/
-*.py[cod]
-.pytest_cache/
 venv/
-.venv/
-
-# Environment and secrets
-.env
-.env.local
-.env.*.local
-
-# Databases and backups
+**/venv/
+node_modules/
+**/node_modules/
+dist/
+**/dist/
+__pycache__/
+**/__pycache__/
+*.pyc
 *.db
-*.db-journal
+*.db-*
 *.sqlite
 *.sqlite3
-*backup*.db
-*before*.db
-
-# Node.js
-node_modules/
-frontend/dist/
-
-# Logs and temporary files
-*.log
-.DS_Store
-Thumbs.db
-# Local backup files - never upload
+*.bak
+.env
+.env.*
+!.env.example
+backend/exports/
+backend/dataset_exports/*.csv
+backend/reproducibility_tests/run*.csv
+backend/*_before_*.py
 backend/exports_backup_*/
-backend/*before*.py
-backend/*before*.db
-backend/dataset_exports/*before*.csv
-backend/dataset_exports/ground_truth_pre_repair.csv
-backend/exports/transactions.json
-backend/exports/pennywise_dataset.sql
-backend/exports/transactions.json
-backend/exports/pennywise_dataset.sql
-backend/exports/transaction_categorizations.json
+backend/test_edge_cases_copy.py
+0
+budget.period_start

@@ -1,0 +1,9 @@
+﻿{
+  "seed": 20261022,
+  "test_users": 2,
+  "test_transactions": 100,
+  "runs": 2,
+  "sha256": "bfefc8770acb835ae2293147bae4f24d3e055e53be8837b6c2c380a935c364d0",
+  "small_generator_reproducible": true,
+  "original_500k_reproducibility_verified": false
+}

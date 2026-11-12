@@ -1,0 +1,8 @@
+category_id,category_name,category_type
+CAT-001,Food & Dining,Expense
+CAT-002,Transportation,Expense
+CAT-003,Shopping,Expense
+CAT-004,Housing,Expense
+CAT-005,Entertainment,Expense
+CAT-006,Income,Income
+CAT-007,Transfer,Transfer

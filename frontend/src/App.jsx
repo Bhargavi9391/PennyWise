@@ -1,4 +1,4 @@
-
+﻿
 import { useState, useEffect } from 'react'
 
 import {
@@ -16,7 +16,8 @@ import {
   deleteCategoryRule,
   generateInsights,
 getInsights,
-updateInsight
+updateInsight,
+  getLifecycleEvents
 } from './services/api'
 
 import { motion } from 'framer-motion'
@@ -97,6 +98,7 @@ function App() {
   // ================================
 
   const [insights, setInsights] = useState([])
+  const [lifecycleEvents, setLifecycleEvents] = useState([])
   const [loadingInsights, setLoadingInsights] = useState(true)
   const [generatingInsights, setGeneratingInsights] = useState(false)
   const [updatingInsightId, setUpdatingInsightId] = useState(null)
@@ -277,6 +279,7 @@ function App() {
   loadBudgets()
   loadCategoryRules()
   loadInsights()
+  getLifecycleEvents().then(data => setLifecycleEvents(data.events || [])).catch(console.error)
 }, [])
 
   // ================================
@@ -1296,12 +1299,12 @@ type: item.type || 'Expense',
           {!loadingInsights && (
             <div className="insight-summary">
               <div>
-                <strong>{insights.length}</strong>
-                <span>Total Insights</span>
+                <strong>{insights.filter(item => item.status !== "Resolved").length}</strong>
+                <span>Active Insights</span>
               </div>
               <div>
                 <strong>
-                  {insights.filter(item => item.severity === 'High').length}
+                  {insights.filter(item => item.severity === 'High' && item.status !== 'Resolved').length}
                 </strong>
                 <span>High Priority</span>
               </div>
@@ -1316,15 +1319,15 @@ type: item.type || 'Expense',
 
           {loadingInsights ? (
             <p className="empty-message">Loading smart insights...</p>
-          ) : insights.length === 0 ? (
+          ) : insights.filter(item => item.status !== "Resolved").length === 0 ? (
             <div className="insight-empty">
               <ShieldAlert size={38} />
-              <strong>No insights available yet</strong>
-              <p>Generate insights to discover spending patterns and alerts.</p>
+              <strong>No active insights</strong>
+              <p>All alerts are resolved, or no insights have been generated yet.</p>
             </div>
           ) : (
             <div className="insight-list">
-              {insights.map(item => {
+              {insights.filter(item => item.status !== 'Resolved').map(item => {
                 const severityClass = item.severity.toLowerCase()
 
                 return (
@@ -1402,6 +1405,33 @@ type: item.type || 'Expense',
             </div>
           )}
         </section>
+
+        {/* RESOLVED INSIGHTS HISTORY */}
+        {insights.some(item => item.status === 'Resolved') && (
+          <section className="panel">
+            <div className="panel-heading">
+              <div>
+                <h3>Resolved History</h3>
+                <p>Previously resolved spending alerts</p>
+              </div>
+            </div>
+            <div className="insight-list">
+              {insights.filter(item => item.status === 'Resolved').map(item => (
+                <div className="insight-card" key={item.insight_id}>
+                  <div className="insight-content">
+                    <strong>{item.title}</strong>
+                    <p>{item.description}</p>
+                    <div className="insight-meta">
+                      <span>{item.insight_type}</span>
+                      <span>{new Date(item.created_at).toLocaleDateString('en-IN')}</span>
+                    </div>
+                    <span className="insight-status resolved">Resolved</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
 
           {/* RECURRING PAYMENTS */}
           <div id="recurring-section">
@@ -1574,7 +1604,7 @@ type: item.type || 'Expense',
 
                     {item.percentage > 100 && (
                       <p className="budget-warning">
-                        ⚠️ Budget exceeded!
+                        ⚠️ Budget exceeded!
                       </p>
                     )}
 
@@ -1604,6 +1634,37 @@ type: item.type || 'Expense',
             </div>
           </section>
 
+          {/* AUDIT HISTORY */}
+          <section className="panel" id="audit-history-section">
+            <div className="panel-heading">
+              <div>
+                <h3>Audit History</h3>
+                <p>Transaction, budget, insight and recurring payment changes.</p>
+              </div>
+              <button className="add-btn" onClick={() => getLifecycleEvents().then(data => setLifecycleEvents(data.events || [])).catch(console.error)}>Refresh History</button>
+            </div>
+            {lifecycleEvents.length === 0 ? (
+              <p className="empty-message">No audit events recorded yet.</p>
+            ) : (
+              <div className="insight-list">
+                {lifecycleEvents.map(event => (
+                  <div className="insight-card" key={event.event_id}>
+                    <div className="insight-content">
+                      <strong>{event.entity_type} - {event.event_type}</strong>
+                      <p>{event.entity_id}</p>
+                      <div className="insight-meta">
+                        <span>{event.actor}</span>
+                        <span>{event.event_timestamp ? new Date(event.event_timestamp).toLocaleString('en-IN') : ''}</span>
+                      </div>
+                      {event.reason && <p>{event.reason}</p>}
+                      {event.old_value && <p>Before: {event.old_value}</p>}
+                      {event.new_value && <p>After: {event.new_value}</p>}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </section>
           {/* FOOTER */}
           <footer>
             © 2026 PennyWise · Smart money, smarter life.
@@ -1616,3 +1677,11 @@ type: item.type || 'Expense',
 }
 
 export default App
+
+
+
+
+
+
+
+
