@@ -1,9 +1,10 @@
 
 import sqlite3
 import json
+from pathlib import Path
 from datetime import datetime, timezone
 
-DB_NAME = "pennywise_dataset.db"
+DB_NAME = str(Path(__file__).resolve().parent / "pennywise_dataset.db")
 
 conn = sqlite3.connect(DB_NAME)
 conn.execute("PRAGMA foreign_keys = ON")
