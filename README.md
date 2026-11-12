@@ -31,7 +31,7 @@ It also includes a synthetic dataset for validation and analysis.
 - `DATA_DICTIONARY.md` - columns, types and foreign-key references
 - `ER_DIAGRAM.md` - entity relationship diagram
 
-## Dataset snapshot
+## Legacy SQLite Dataset Snapshot (Historical)
 
 - Users: 1,000
 - Accounts: 2,000
@@ -46,9 +46,7 @@ It also includes a synthetic dataset for validation and analysis.
 - Edge-case scenarios: 5
 - Insights in original synthetic dataset: 0 (legacy snapshot; final V2 has 1,000)
 
-The dataset manifest records seed `20261022`; the original SQLite snapshot was not independently regenerated; final V2 CSV reproducibility was verified. The operational application database is
-separate from the synthetic dataset database; their identifiers and records
-must not be mixed.
+The counts above describe the historical SQLite snapshot, not the final V2 dataset. The original SQLite snapshot was not independently regenerated. Final V2 generation and reproducibility results are documented separately below. The operational application database is separate from the synthetic dataset database; their identifiers and records must not be mixed.
 
 ## Main workflow
 
@@ -159,7 +157,7 @@ Refunds: 12,990 | Labelled edge-case scenarios: 5
 
 Signed amounts, paired transfers, linked refunds, and monthly recurring payments are supported.
 
-Full V2 validation: PASS. Reproducibility: PASS (matching transaction SHA-256).
+Full V2 validation: PASS. Two independent full runs using seed `20261022` produced matching counts and SHA-256 checksums for all 11 CSV files.
 
 Generate: python backend/generate_configurable_v2.py --users 1000 --transactions-per-user 500 --output-dir backend/v2_full_run1
 
@@ -216,10 +214,10 @@ Report: `backend/dataset_exports/v2_recurring_evaluation_report.json`
 ### V2 Export Deliverables
 
 CSV:
-`backend/v2_full_run2/`
+`backend/v2_final_run2/`
 
 JSON:
-`backend/v2_full_run2/json/`
+`backend/v2_final_run2/json/`
 
 Category rules:
 - `backend/dataset_exports/v2_category_rules.csv`

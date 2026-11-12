@@ -1,3 +1,4 @@
+
 venv/
 **/venv/
 node_modules/
@@ -15,12 +16,19 @@ __pycache__/
 .env
 .env.*
 !.env.example
+
+# Application exports
 backend/exports/
 backend/dataset_exports/*.csv
 backend/reproducibility_tests/run*.csv
-backend/*_before_*.py
 backend/exports_backup_*/
+
+# Temporary and backup source files
+backend/*_before_*.py
 backend/test_edge_cases_copy.py
+backend/reproducibility_tests/generate_small_backup.py
+
+# Existing local configuration artifacts
 0
 budget.period_start
 
@@ -30,3 +38,17 @@ budget.period_start
 /backend/v2_small_test_*/
 /backend/reproducibility_tests/full_run*/
 /backend/reproducibility_tests/generated_test_run*/
+
+# Final generated V2 datasets
+/backend/v2_final_run1/
+/backend/v2_final_run2/
+/backend/v2_id_test/
+/backend/v2_rules_test/
+/backend/v2_rules_test_2/
+
+# Large uncompressed SQL export
+/backend/dataset_exports/v2_seed.sql
+
+# Local README backups
+/README_BACKUP.md
+/README_before_final_cleanup.md

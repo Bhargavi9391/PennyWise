@@ -1,0 +1,2 @@
+budget_id,user_id,category_id,budget_amount,period_start,period_end,status
+BUD-USR-000001-2025-11-CAT-001,USR-000001,CAT-INVALID-999,13500.00,2025-11-01,2025-11-30,Active

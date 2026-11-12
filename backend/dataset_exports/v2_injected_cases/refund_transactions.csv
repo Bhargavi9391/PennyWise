@@ -1,0 +1,3 @@
+transaction_id,user_id,account_id,merchant_id,category_id,transaction_date,description,amount,transaction_type,status,original_transaction_id,transfer_group_id
+TXN-2026-00000004,USR-000001,ACC-USR-000001-01,MER-001,CAT-005,2025-12-15,Netflix,-499.00,Expense,Completed,,
+TXN-2026-00000038,USR-000001,ACC-USR-000001-02,MER-001,CAT-005,2025-12-28,Netflix ONLINE,249.50,Expense,Completed,TXN-2026-00000004,

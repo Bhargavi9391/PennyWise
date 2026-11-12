@@ -1,0 +1,13 @@
+{
+  "baseline_modified": false,
+  "injection_count": 5,
+  "checks": {
+    "TRANSFER_DOUBLE_COUNT": true,
+    "REFUND_AS_NEW_EXPENSE": true,
+    "RECURRING_PAYMENT_SKIPPED": true,
+    "TIMEZONE_BOUNDARY": true,
+    "INVALID_BUDGET_CATEGORY": true
+  },
+  "all_passed": true,
+  "note": "Checks verify injected fixtures, not live application detection."
+}

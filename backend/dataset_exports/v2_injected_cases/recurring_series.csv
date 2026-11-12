@@ -1,0 +1,2 @@
+series_id,user_id,account_id,merchant_id,category_id,series_name,expected_amount,frequency,last_payment_date,next_payment_date,occurrence_count,status
+REC-000001,USR-000001,ACC-USR-000001-01,MER-001,CAT-005,Netflix,499.00,Monthly,2026-10-15,2026-11-15,12,Active

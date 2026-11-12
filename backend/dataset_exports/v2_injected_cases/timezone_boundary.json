@@ -1,0 +1,6 @@
+{
+  "utc_timestamp": "2025-12-31T18:45:00+00:00",
+  "incorrect_utc_date": "2025-12-31",
+  "expected_local_date": "2026-01-01",
+  "timezone": "Asia/Kolkata"
+}
