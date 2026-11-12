@@ -23,3 +23,10 @@ backend/exports_backup_*/
 backend/test_edge_cases_copy.py
 0
 budget.period_start
+
+# Generated synthetic datasets
+/backend/v2_full_run*/
+/backend/v2_medium_test_*/
+/backend/v2_small_test_*/
+/backend/reproducibility_tests/full_run*/
+/backend/reproducibility_tests/generated_test_run*/

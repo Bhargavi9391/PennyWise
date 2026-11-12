@@ -1,0 +1,6 @@
+scenario_id,issue_type,related_transaction_id,related_series_id,test_payload
+EDGE-001,TRANSFER_DOUBLE_COUNT,TXN-2026-00000150,,"{""transfer_group_id"": ""TRF-000000150"", ""expected_expense_contribution"": 0}"
+EDGE-002,REFUND_AS_NEW_EXPENSE,TXN-2026-00000038,,"{""original_transaction_id"": ""TXN-2026-00000004"", ""expected_treatment"": ""REDUCE_ORIGINAL_EXPENSE""}"
+EDGE-003,RECURRING_PAYMENT_SKIPPED,,REC-000001-001-EXP,"{""expected_payment_date"": ""2026-11-15"", ""expected_status"": ""MISSING_REQUIRES_REVIEW""}"
+EDGE-004,TIMEZONE_BOUNDARY,,,"{""timezone"": ""Asia/Kolkata"", ""utc_timestamp"": ""2025-12-31T18:45:00Z"", ""expected_local_date"": ""2026-01-01""}"
+EDGE-005,INVALID_BUDGET_CATEGORY,,,"{""attempted_category_id"": ""CAT-999"", ""expected_result"": ""REJECT_INVALID_CATEGORY""}"

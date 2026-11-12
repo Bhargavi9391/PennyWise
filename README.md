@@ -146,3 +146,15 @@ Backend: cd backend; venv\Scripts\activate; pip install -r requirements.txt; pyt
 Frontend: cd frontend; npm install; npm run dev
 Backend URL: http://127.0.0.1:5000
 Note: pennywise.db is operational; pennywise_dataset.db is synthetic. Keep them separate.
+
+## V2 Final Dataset (Validated)
+Users: 1,000 | Accounts: 2,000 | Merchants: 21 | Categories: 7
+Transactions: 500,000 | Ground truth: 500,000 | Budgets: 60,000
+Recurring series: 3,000 | Occurrences: 36,000 | Insights: 1,000
+Refunds: 12,990 | Labelled edge-case scenarios: 5
+Signed amounts, paired transfers, linked refunds, and monthly recurring payments are supported.
+Full V2 validation: PASS. Reproducibility: PASS (matching transaction SHA-256).
+Generate: python backend/generate_configurable_v2.py --users 1000 --transactions-per-user 500 --output-dir backend/v2_full_run1
+Validate: python backend/validate_full_dataset_v2.py --dataset-dir backend/v2_full_run1 --transactions-per-user 500
+Generated CSV folders are excluded from Git.
+
