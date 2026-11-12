@@ -207,7 +207,7 @@ and `v2_categorization_predictions.csv`.
 - Date-order errors: 0
 - Account, merchant and category mismatches: 0
 - Amount mismatches over 10%: 0
-- Precision/recall: Not calculable because independent recurring ground truth is unavailable.
+- Integrity-only evaluation does not calculate precision/recall. A separate generator-labelled, group-level detector evaluation reports precision 100%, recall 99.97%, and F1 99.98% (2,999 TP, 0 FP, 1 FN). This is an offline detector evaluation, not a direct Flask endpoint test.
 
 Report: `backend/dataset_exports/v2_recurring_evaluation_report.json`
 
@@ -266,3 +266,11 @@ Export SQL:
 
 `python backend/export_v2_sql.py`
 
+
+### Labelled Recurring Evaluation
+
+See ackend/dataset_exports/v2_recurring_labelled_evaluation_report.json for group-level metrics and documented limitations.
+
+### Final V2 Validation
+
+See ackend/dataset_exports/v2_final_validation_report.json for the final 500,000-transaction validation result.
