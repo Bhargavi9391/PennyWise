@@ -26,6 +26,7 @@ FIELDS = {
  'accounts':['account_id','user_id','account_name','account_type'],
  'merchants':['merchant_id','merchant_name'],
  'categories':['category_id','category_name','category_type'],
+ 'category_rules':['rule_id','category_id','rule_name','match_field','match_type','match_value','priority','is_active','effective_from','effective_to','created_at'],
  'transactions':['transaction_id','user_id','account_id','merchant_id','category_id','transaction_date','description','amount','transaction_type','status','original_transaction_id','transfer_group_id'],
  'ground_truth':['transaction_id','expected_category_id','expected_transaction_type','is_intentionally_uncategorized','issue_type','original_transaction_id','transfer_group_id'],
  'budgets':['budget_id','user_id','category_id','budget_amount','period_start','period_end','status'],
@@ -73,6 +74,7 @@ def main():
    writers[table].writerow(row);counts[table]+=1
   for row in merchants: emit('merchants',row)
   for row in categories: emit('categories',row)
+  for row in read('category_rules.csv'): emit('category_rules',row)
   for u in range(1,a.users+1):
    uid=f'USR-{u:06d}'
    emit('user_profiles',{'user_id':uid,'full_name':f'Synthetic User {u:06d}','email':f'synthetic{u:06d}@example.invalid'})

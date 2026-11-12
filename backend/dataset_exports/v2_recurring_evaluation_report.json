@@ -1,0 +1,27 @@
+{
+  "dataset": "full_run2",
+  "transactions": 500000,
+  "recurring_series": 3000,
+  "recurring_occurrences": 36000,
+  "frequency_distribution": {
+    "Monthly": 3000
+  },
+  "status_distribution": {
+    "Active": 3000
+  },
+  "occurrence_status_distribution": {
+    "Matched": 36000
+  },
+  "series_occurrence_count_mismatches": 0,
+  "series_without_occurrences": 0,
+  "interval_regular_series": 3000,
+  "interval_irregular_series": 0,
+  "occurrence_date_order_errors": 0,
+  "account_mismatches": 0,
+  "merchant_mismatches": 0,
+  "category_mismatches": 0,
+  "amount_mismatches_over_10_percent": 0,
+  "other_integrity_errors": {},
+  "precision_recall": "NOT CALCULABLE: independent recurring ground truth unavailable",
+  "note": "Interval and amount checks are diagnostics, not ground-truth precision or recall."
+}

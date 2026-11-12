@@ -1,0 +1,16 @@
+{
+  "user_profiles": 1000,
+  "merchants": 21,
+  "categories": 7,
+  "accounts": 2000,
+  "category_rules": 28,
+  "transactions": 500000,
+  "budgets": 60000,
+  "recurring_series": 3000,
+  "recurring_occurrences": 36000,
+  "insights": 1000,
+  "ground_truth": 500000,
+  "total_rows": 1103056,
+  "sql_file": "C:\\Users\\Bhargavi Jaddu\\Desktop\\PennyWise\\backend\\dataset_exports\\v2_seed.sql",
+  "ground_truth_separate": true
+}

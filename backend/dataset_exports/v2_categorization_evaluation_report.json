@@ -1,0 +1,100 @@
+{
+  "dataset": "full_run2",
+  "evaluation_method": "SQLite description-based CategoryRule simulation",
+  "transactions": 500000,
+  "ground_truth": 500000,
+  "evaluated_transactions": 483189,
+  "intentionally_uncategorized_excluded": 16811,
+  "matched_transactions": 326168,
+  "missed_classifications": 157021,
+  "accuracy": 0.5705,
+  "rule_coverage": 0.675,
+  "uncategorized_rate": 0.325,
+  "macro_precision": 0.7327,
+  "macro_recall": 0.5955,
+  "macro_f1": 0.6369,
+  "description_rules_available": 28,
+  "merchant_rules_not_evaluated": 0,
+  "per_category": {
+    "CAT-001": {
+      "precision": 0.8156,
+      "recall": 0.6014,
+      "f1_score": 0.6923,
+      "support": 78296
+    },
+    "CAT-002": {
+      "precision": 0.8149,
+      "recall": 1.0,
+      "f1_score": 0.898,
+      "support": 62303
+    },
+    "CAT-003": {
+      "precision": 0.8184,
+      "recall": 1.0,
+      "f1_score": 0.9001,
+      "support": 31433
+    },
+    "CAT-004": {
+      "precision": 0.8177,
+      "recall": 0.5826,
+      "f1_score": 0.6804,
+      "support": 107063
+    },
+    "CAT-005": {
+      "precision": 0.8912,
+      "recall": 0.4822,
+      "f1_score": 0.6258,
+      "support": 60451
+    },
+    "CAT-006": {
+      "precision": 0.971,
+      "recall": 0.502,
+      "f1_score": 0.6618,
+      "support": 86247
+    },
+    "CAT-007": {
+      "precision": 0,
+      "recall": 0.0,
+      "f1_score": 0,
+      "support": 57396
+    }
+  },
+  "confusion_matrix": {
+    "CAT-005": {
+      "CAT-005": 29150,
+      "UNCATEGORIZED": 31301
+    },
+    "CAT-006": {
+      "CAT-006": 43296,
+      "CAT-002": 8572,
+      "UNCATEGORIZED": 12864,
+      "CAT-003": 4266,
+      "CAT-001": 6537,
+      "CAT-004": 8542,
+      "CAT-005": 2170
+    },
+    "CAT-004": {
+      "UNCATEGORIZED": 44691,
+      "CAT-004": 62372
+    },
+    "CAT-003": {
+      "CAT-003": 31433
+    },
+    "CAT-001": {
+      "CAT-001": 47088,
+      "UNCATEGORIZED": 31208
+    },
+    "CAT-002": {
+      "CAT-002": 62303
+    },
+    "CAT-007": {
+      "CAT-002": 5577,
+      "UNCATEGORIZED": 36957,
+      "CAT-001": 4108,
+      "CAT-003": 2709,
+      "CAT-004": 5365,
+      "CAT-006": 1293,
+      "CAT-005": 1387
+    }
+  }
+}

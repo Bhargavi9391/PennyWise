@@ -1,4 +1,4 @@
-﻿# PennyWise
+# PennyWise
 
 ## Business problem
 
@@ -166,3 +166,104 @@ Generate: python backend/generate_configurable_v2.py --users 1000 --transactions
 Validate: python backend/validate_full_dataset_v2.py --dataset-dir backend/v2_full_run1 --transactions-per-user 500
 
 Generated CSV folders are excluded from Git.
+
+## V2 Evaluation and Export Evidence (2026-11-12)
+
+### Reproducibility
+- Generator: `generate_configurable_v2.py`
+- Fixed seed: `20261022`
+- Users: 1,000
+- Transactions: 500,000
+- Two independent full runs completed.
+- CSV SHA-256 comparison: 10/10 files matched.
+- Dataset counts matched across both runs.
+- V2 reproducibility report: `backend/dataset_exports/v2_reproducibility_report.json`
+- V2 manifest: `backend/dataset_exports/v2_manifest.json`
+
+This proves reproducibility of the standalone V2 CSV generator,
+not byte-for-byte reproduction of the original SQLite database.
+
+### Categorization Evaluation
+Dataset: `v2_full_run2`
+
+- Transactions: 500,000
+- Evaluated transactions: 483,189
+- Intentionally uncategorized exclusions: 16,811
+- Accuracy: 57.05%
+- Rule coverage: 67.50%
+- Macro precision: 73.27%
+- Macro recall: 59.55%
+- Macro F1: 63.69%
+
+Evaluation uses 28 description-based category rules.
+Transfer categorization requires separate business logic.
+See `backend/dataset_exports/v2_categorization_evaluation_report.json`
+and `v2_categorization_predictions.csv`.
+
+### Recurring Integrity Evaluation
+- Recurring series: 3,000
+- Recurring occurrences: 36,000
+- Regular intervals: 3,000
+- Occurrence count mismatches: 0
+- Missing occurrence series: 0
+- Date-order errors: 0
+- Account, merchant and category mismatches: 0
+- Amount mismatches over 10%: 0
+- Precision/recall: Not calculable because independent recurring ground truth is unavailable.
+
+Report: `backend/dataset_exports/v2_recurring_evaluation_report.json`
+
+### V2 Export Deliverables
+
+CSV:
+`backend/v2_full_run2/`
+
+JSON:
+`backend/v2_full_run2/json/`
+
+Category rules:
+- `backend/dataset_exports/v2_category_rules.csv`
+- `backend/dataset_exports/v2_category_rules.json`
+
+SQL:
+- `backend/dataset_exports/v2_seed.sql`
+- `backend/dataset_exports/v2_sql_export_summary.json`
+
+SQL verification:
+- SQL execution: PASS
+- Foreign-key violations: 0
+- Transactions: 500,000
+- Ground-truth records: 500,000
+- SQLite integrity check: OK
+
+The SQL seed contains 1,103,056 records across 11 tables.
+Ground-truth labels are maintained in a separate table and are
+not included in transaction input features.
+
+### V2 Generation and Validation Commands
+
+From the project root:
+
+Generate a full V2 dataset:
+
+`python backend/generate_configurable_v2.py --users 1000 --transactions-per-user 500 --output-dir backend/v2_full_run1`
+
+Validate:
+
+`python backend/validate_full_dataset_v2.py --dataset-dir backend/v2_full_run1 --transactions-per-user 500`
+
+Evaluate categorization:
+
+`python backend/evaluate_categorization_v2.py`
+
+Evaluate recurring integrity:
+
+`python backend/evaluate_recurring_v2.py`
+
+Export JSON:
+
+`python backend/export_v2_json.py`
+
+Export SQL:
+
+`python backend/export_v2_sql.py`
